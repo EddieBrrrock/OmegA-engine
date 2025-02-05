@@ -2069,13 +2069,13 @@ void S_AL_MusicProcess(ALuint b)
 	else
 		qalBufferData(b, format, decode_buffer, l, curstream->info.rate);
 
-	if( ( error = qalGetError( ) ) != AL_NO_ERROR )
-	{
-		S_AL_StopBackgroundTrack( );
-		Com_Printf( S_COLOR_RED "ERROR: while buffering data for music stream - %s\n",
-				S_AL_ErrorMsg( error ) );
-		return;
-	}
+	//if( ( error = qalGetError( ) ) != AL_NO_ERROR )
+	//{
+	//	S_AL_StopBackgroundTrack( );
+	//	Com_Printf( S_COLOR_RED "ERROR: while buffering data for music stream - %s\n",
+	//			S_AL_ErrorMsg( error ) );
+	//	return;
+	//}
 }
 
 /*
