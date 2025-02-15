@@ -401,7 +401,7 @@ void Con_CheckResize( console_t *con )
 	}
 	else
 	{
-		scale = (cls.glconfig.vidHeight / 480) * con_scale->value;
+		scale = con_scale->value * ((cls.glconfig.vidWidth / 1920.0f) + (cls.glconfig.vidHeight / 1080.0f));
 	}
 
 	con->viswidth = cls.glconfig.vidWidth;
@@ -571,7 +571,7 @@ void Con_Init( void )
 	Cvar_SetDescription( con_conspeed, "Console opening/closing scroll speed." );
 	con_autoclear = Cvar_Get("con_autoclear", "1", CVAR_ARCHIVE_ND);
 	Cvar_SetDescription( con_autoclear, "Enable/disable clearing console input text when console is closed." );
-	con_scale = Cvar_Get( "con_scale", "0.8", CVAR_ARCHIVE_ND );
+	con_scale = Cvar_Get( "con_scale", "1", CVAR_ARCHIVE_ND );
 	Cvar_CheckRange( con_scale, "0.5", "8", CV_FLOAT );
 	Cvar_SetDescription( con_scale, "Console font size scale." );
 	con_clock = Cvar_Get( "con_clock", "1", CVAR_ARCHIVE_ND );
