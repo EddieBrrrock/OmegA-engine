@@ -399,6 +399,10 @@ void Con_CheckResize( console_t *con )
 	{
 		scale = con_scale->value;
 	}
+	else if ( Cvar_VariableIntegerValue( "r_ext_supersample" ) )
+	{
+		scale = con_scale->value * ((cls.glconfig.vidWidth / 1920.0f) + (cls.glconfig.vidHeight / 1080.0f)) / 2.0f;
+	}
 	else
 	{
 		scale = con_scale->value * ((cls.glconfig.vidWidth / 1920.0f) + (cls.glconfig.vidHeight / 1080.0f));
