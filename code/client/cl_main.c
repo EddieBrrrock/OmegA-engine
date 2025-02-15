@@ -100,6 +100,8 @@ cvar_t *cl_consoleHeight;
 cvar_t *cl_omegaEngine;
 cvar_t *fwd_use;
 cvar_t *fwd_addr;
+cvar_t *r_displaywidth;
+cvar_t *r_displayheight;
 
 clientActive_t		cl;
 clientConnection_t	clc;
@@ -3760,6 +3762,9 @@ qboolean CL_GetModeInfo( int *width, int *height, float *windowAspect, int mode,
 		pixelAspect = vm->pixelAspect;
 	}
 
+	Cvar_SetValue( "r_displaywidth", *width );
+	Cvar_SetValue( "r_displayheight", *height );
+
 	*windowAspect = (float)*width / ( *height * pixelAspect );
 
 	return qtrue;
@@ -4007,6 +4012,8 @@ void CL_Init( void ) {
 	Cvar_SetDescription( cl_consoleHeight, "Console height, set as value from 0.0-1.0, use with \\seta to save in config." );
 	cl_omegaEngine = Cvar_Get( "cl_omegaEngine", "1", CVAR_ROM | CVAR_PROTECTED );
 	Cvar_SetDescription( cl_omegaEngine, "Informs the game that we are using OmegA engine." );
+	r_displaywidth = Cvar_Get( "r_displaywidth", "0", CVAR_PROTECTED );
+	r_displayheight = Cvar_Get( "r_displayheight", "0", CVAR_PROTECTED );
         fwd_use = Cvar_Get( "fwd_use", "0", CVAR_ARCHIVE );
 	Cvar_CheckRange( fwd_use, "0", "1", CV_INTEGER );
 	Cvar_SetDescription( fwd_use, "QWFWD proxy support from fX3." );

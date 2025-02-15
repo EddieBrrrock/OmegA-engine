@@ -288,7 +288,7 @@ PLIST="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 
 PLIST="${PLIST}
     <key>NSHumanReadableCopyright</key>
-    <string>OmegA Copyright © 2021-2023 Ekip, Inc. All rights reserved.</string>
+    <string>OmegA Copyright © 2021-2025 Ekip, Inc. All rights reserved.</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>NSHighResolutionCapable</key>
