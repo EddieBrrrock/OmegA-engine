@@ -2580,7 +2580,7 @@ qboolean S_AL_Init( soundInterface_t *si )
 			while((curlen = strlen(devicelist)))
 			{
 				Q_strcat(devicenames, sizeof(devicenames), devicelist);
-				Q_strcat(devicenames, sizeof(devicenames), "\n");
+				Q_strcat(devicenames, sizeof(devicenames), "");
 
 				devicelist += curlen + 1;
 			}
