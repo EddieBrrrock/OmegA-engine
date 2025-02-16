@@ -4013,7 +4013,9 @@ void CL_Init( void ) {
 	cl_omegaEngine = Cvar_Get( "cl_omegaEngine", "1", CVAR_ROM | CVAR_PROTECTED );
 	Cvar_SetDescription( cl_omegaEngine, "Informs the game that we are using OmegA engine." );
 	r_displaywidth = Cvar_Get( "r_displaywidth", "0", CVAR_PROTECTED );
+	Cvar_SetDescription( r_displaywidth, "Width currently displayed to your screen." );
 	r_displayheight = Cvar_Get( "r_displayheight", "0", CVAR_PROTECTED );
+	Cvar_SetDescription( r_displayheight, "Height currently displayed to your screen." );
         fwd_use = Cvar_Get( "fwd_use", "0", CVAR_ARCHIVE );
 	Cvar_CheckRange( fwd_use, "0", "1", CV_INTEGER );
 	Cvar_SetDescription( fwd_use, "QWFWD proxy support from fX3." );

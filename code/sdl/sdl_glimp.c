@@ -53,8 +53,11 @@ static SDL_GLContext SDL_glContext = NULL;
 static PFN_vkGetInstanceProcAddr qvkGetInstanceProcAddr;
 #endif
 
+cvar_t *r_availableModes;
 cvar_t *r_stereoEnabled;
 cvar_t *in_nograb;
+
+float displayAspect = 0.0f;
 
 /*
 ===============
@@ -181,6 +184,123 @@ static SDL_HitTestResult SDL_HitTestFunc( SDL_Window *win, const SDL_Point *area
 
 /*
 ===============
+GLimp_CompareModes
+===============
+*/
+static int GLimp_CompareModes( const void *a, const void *b )
+{
+	const float ASPECT_EPSILON = 0.001f;
+	SDL_Rect *modeA = (SDL_Rect *)a;
+	SDL_Rect *modeB = (SDL_Rect *)b;
+	float aspectA = (float)modeA->w / (float)modeA->h;
+	float aspectB = (float)modeB->w / (float)modeB->h;
+	int areaA = modeA->w * modeA->h;
+	int areaB = modeB->w * modeB->h;
+	float aspectDiffA = fabs( aspectA - displayAspect );
+	float aspectDiffB = fabs( aspectB - displayAspect );
+	float aspectDiffsDiff = aspectDiffA - aspectDiffB;
+
+	if( aspectDiffsDiff > ASPECT_EPSILON )
+		return 1;
+	else if( aspectDiffsDiff < -ASPECT_EPSILON )
+		return -1;
+	else
+		return areaA - areaB;
+}
+
+
+/*
+===============
+GLimp_DetectAvailableModes
+===============
+*/
+static void GLimp_DetectAvailableModes(void)
+{
+	int i, j;
+	char buf[ MAX_STRING_CHARS ] = { 0 };
+	int numSDLModes;
+	SDL_Rect *modes;
+	int numModes = 0;
+
+	SDL_DisplayMode windowMode;
+	int display = SDL_GetWindowDisplayIndex( SDL_window );
+	if( display < 0 )
+	{
+		Com_WPrintf( "Couldn't get window display index, no resolutions detected: %s\n", SDL_GetError() );
+		return;
+	}
+	numSDLModes = SDL_GetNumDisplayModes( display );
+
+	if( SDL_GetWindowDisplayMode( SDL_window, &windowMode ) < 0 || numSDLModes <= 0 )
+	{
+		Com_WPrintf( "Couldn't get window display mode, no resolutions detected: %s\n", SDL_GetError() );
+		return;
+	}
+
+	modes = SDL_calloc( (size_t)numSDLModes, sizeof( SDL_Rect ) );
+	if ( !modes )
+	{
+		Com_Error( ERR_FATAL, "Out of memory" );
+	}
+
+	for( i = 0; i < numSDLModes; i++ )
+	{
+		SDL_DisplayMode mode;
+
+		if( SDL_GetDisplayMode( display, i, &mode ) < 0 )
+			continue;
+
+		if( !mode.w || !mode.h )
+		{
+			Com_Printf( "Display supports any resolution\n" );
+			SDL_free( modes );
+			return;
+		}
+
+		if( windowMode.format != mode.format )
+			continue;
+
+		// SDL can give the same resolution with different refresh rates.
+		// Only list resolution once.
+		for( j = 0; j < numModes; j++ )
+		{
+			if( mode.w == modes[ j ].w && mode.h == modes[ j ].h )
+				break;
+		}
+
+		if( j != numModes )
+			continue;
+
+		modes[ numModes ].w = mode.w;
+		modes[ numModes ].h = mode.h;
+		numModes++;
+	}
+
+	if( numModes > 1 )
+		qsort( modes, numModes, sizeof( SDL_Rect ), GLimp_CompareModes );
+
+	for( i = 0; i < numModes; i++ )
+	{
+		const char *newModeString = va( "%ux%u ", modes[ i ].w, modes[ i ].h );
+
+		if( strlen( newModeString ) < (int)sizeof( buf ) - strlen( buf ) )
+			Q_strcat( buf, sizeof( buf ), newModeString );
+		else
+			Com_WPrintf( "Skipping mode %ux%u, buffer too small\n", modes[ i ].w, modes[ i ].h );
+	}
+
+	if( *buf )
+	{
+		buf[ strlen( buf ) - 1 ] = 0;
+		Com_Printf( "Available modes: '%s'\n", buf );
+		Cvar_Set( "r_availableModes", buf );
+	}
+	SDL_free( modes );
+}
+
+
+/*
+===============
 GLimp_SetMode
 ===============
 */
@@ -246,6 +366,19 @@ static int GLW_SetMode( int mode, const char *modeFS, qboolean fullscreen, qbool
 
 	config->isFullscreen = fullscreen;
 	glw_state.isFullscreen = fullscreen;
+
+	if( SDL_GetDesktopDisplayMode( display, &desktopMode ) == 0 )
+	{
+		displayAspect = (float)desktopMode.w / (float)desktopMode.h;
+
+		Com_Printf( "Display aspect: %.3f\n", displayAspect );
+	}
+	else
+	{
+		Com_Memset( &desktopMode, 0, sizeof( SDL_DisplayMode ) );
+
+		Com_Printf( "Cannot determine display aspect, assuming 1.333\n" );
+	}
 
 	Com_Printf( "...setting mode %d:", mode );
 
@@ -521,6 +654,8 @@ static int GLW_SetMode( int mode, const char *modeFS, qboolean fullscreen, qbool
 		return RSERR_INVALID_MODE;
 	}
 
+	GLimp_DetectAvailableModes();
+
 	if ( !fullscreen && r_noborder->integer )
 		SDL_SetWindowHitTest( SDL_window, SDL_HitTestFunc, NULL );
 
@@ -645,6 +780,8 @@ void GLimp_Init( glconfig_t *config )
 	// These values force the UI to disable driver selection
 	config->driverType = GLDRV_ICD;
 	config->hardwareType = GLHW_GENERIC;
+
+	r_availableModes = Cvar_Get( "r_availableModes", "", CVAR_ROM );
 
 	// This depends on SDL_INIT_VIDEO, hence having it here
 	IN_Init();
