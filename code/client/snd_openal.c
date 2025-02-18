@@ -2017,7 +2017,7 @@ S_AL_MusicProcess
 static
 void S_AL_MusicProcess(ALuint b)
 {
-	ALenum error;
+	//ALenum error;
 	int l;
 	ALuint format;
 	snd_stream_t *curstream;

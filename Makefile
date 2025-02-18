@@ -823,6 +823,9 @@ endif
 ifneq ($(TARGETS),)
 	@$(MAKE) $(TARGETS) V=$(V)
 endif
+	@echo "  Cleanup:"
+	rm -rf $(B)/*/
+	@if [ $(PLATOFRM) = "linux" ];then strip $(TARGETS);fi
 
 makedirs:
 	@if [ ! -d $(BUILD_DIR) ];then $(MKDIR) $(BUILD_DIR);fi
