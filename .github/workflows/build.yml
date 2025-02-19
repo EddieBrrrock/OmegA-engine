@@ -148,7 +148,7 @@ jobs:
       run: |
         make ${{ matrix.rule }} -j$(sysctl -n hw.logicalcpu) ARCH=x86_64 CC=${{ matrix.cc }} DESTDIR=bin INSTALL=ginstall STRIP=echo QUAKE3=1
         make ${{ matrix.rule }} -j$(sysctl -n hw.logicalcpu) ARCH=arm64 CC=${{ matrix.cc }} DESTDIR=bin INSTALL=ginstall STRIP=echo QUAKE3=1
-        OBJROOT=bin QUAKE3=1 ./make-macosx-app.sh release
+        QUAKE3=1 ./make-macosx-app.sh release
         hdiutil create -format UDZO -srcfolder bin/release-darwin-universal2/OmegA.app bin/OmegA.dmg
 
     - uses: actions/upload-artifact@v4

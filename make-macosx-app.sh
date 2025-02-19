@@ -166,7 +166,7 @@ ICNSDIR="code/unix"
 ICNS="quake3_flat.icns"
 PKGINFO="APPLOMG"
 
-OBJROOT="${OBJROOT:-build}"
+OBJROOT="build"
 #BUILT_PRODUCTS_DIR="${OBJROOT}/${TARGET_NAME}-darwin-${CURRENT_ARCH}"
 if [ "$QUAKE3" == "1" ]; then
 	PRODUCT_NAME="q3-omega"
