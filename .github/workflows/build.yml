@@ -142,7 +142,6 @@ jobs:
     steps:
 
     - uses: actions/checkout@v4
-      if: false
       with:
         submodules: recursive
 
@@ -192,10 +191,9 @@ jobs:
 
     - name: Build
       run: |
-        make ${{ matrix.rule }} -j$(sysctl -n hw.logicalcpu) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} DESTDIR=bin INSTALL=ginstall STRIP=echo
-	./make-macosx-ub2.sh
-	hdiutil create -format UDZO -srcfolder build/release-darwin-universal2/OmegA.app build/OmegA.dmg
-        
+        ./make-macosx-ub2.sh
+        hdiutil create -format UDZO -srcfolder build/release-darwin-universal2/OmegA.app build/OmegA.dmg
+
     - uses: actions/upload-artifact@v4
       with:
         name: release-darwin-${{ matrix.arch }}
@@ -218,7 +216,7 @@ jobs:
           7z a -r q3-omega-engine-linux-x86_64.zip   ./release-linux-x86_64
           7z a -r q3-omega-engine-windows-x86.zip    ./release-mingw64-x86
           7z a -r q3-omega-engine-windows-x86_64.zip ./release-mingw64-x86_64
-          7z a -r q3-omega-engine-macos-universal2.zip   ./release-darwin-x86_64
+          7z a -r q3-omega-engine-macos-universal2.zip   ./release-darwin-universal2
       - name: Create latest build
         uses: czietz/action-automatic-releases@latest
         with:
