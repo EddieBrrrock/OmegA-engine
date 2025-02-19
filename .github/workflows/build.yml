@@ -193,7 +193,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: release-darwin-universal2
-        path: bin
+        path: build
         if-no-files-found: error
         retention-days: 5
 
