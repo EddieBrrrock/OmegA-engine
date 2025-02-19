@@ -55,6 +55,7 @@ MOD_DEFAULT      = omega
 RENDERER_DEFAULT = opengl
 
 ifeq ($(QUAKE3),1)
+  MOD_DEFAULT    = quake3
   ifeq ($(RENDERER_DEFAULT),vulkan)
     CNAME            = q3-omega-vulkan
   else
@@ -825,7 +826,7 @@ ifneq ($(TARGETS),)
 endif
 	@echo "  Cleanup:"
 	rm -rf $(B)/*/
-	@if [ $(PLATOFRM) = "linux" ];then strip $(TARGETS);fi
+	@if [ $(PLATFORM) = "linux" ];then strip $(TARGETS);fi
 
 makedirs:
 	@if [ ! -d $(BUILD_DIR) ];then $(MKDIR) $(BUILD_DIR);fi
