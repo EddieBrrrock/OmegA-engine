@@ -63,9 +63,9 @@ jobs:
     - name: Build
       run: |
         make clean ARCH=${{ matrix.arch }}
-        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} RENDERER_DEFAULT=opengl QUAKE3=1
+        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} DESTDIR=build RENDERER_DEFAULT=opengl QUAKE3=1
         make clean ARCH=${{ matrix.arch }}
-        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} RENDERER_DEFAULT=vulkan QUAKE3=1
+        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} DESTDIR=build RENDERER_DEFAULT=vulkan QUAKE3=1
 
     - uses: actions/upload-artifact@v4
       with:
@@ -112,9 +112,9 @@ jobs:
 
     - name: Build
       run: |
-        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} ${{ matrix.use_sdl }} RENDERER_DEFAULT=opengl QUAKE3=1
+        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} DESTDIR=build ${{ matrix.use_sdl }} RENDERER_DEFAULT=opengl QUAKE3=1
         make clean ARCH=${{ matrix.arch }} 
-        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} ${{ matrix.use_sdl }} RENDERER_DEFAULT=vulkan QUAKE3=1
+        make ${{ matrix.rule }} -j$(nproc) ARCH=${{ matrix.arch }} CC=${{ matrix.cc }} DESTDIR=build ${{ matrix.use_sdl }} RENDERER_DEFAULT=vulkan QUAKE3=1
 
     - uses: actions/upload-artifact@v4
       with:
@@ -146,10 +146,10 @@ jobs:
 
     - name: Build
       run: |
-        make ${{ matrix.rule }} -j$(sysctl -n hw.logicalcpu) ARCH=x86_64 CC=${{ matrix.cc }} INSTALL=ginstall STRIP=echo QUAKE3=1
-        make ${{ matrix.rule }} -j$(sysctl -n hw.logicalcpu) ARCH=arm64 CC=${{ matrix.cc }} INSTALL=ginstall STRIP=echo QUAKE3=1
+        make ${{ matrix.rule }} -j$(sysctl -n hw.logicalcpu) ARCH=x86_64 CC=${{ matrix.cc }} DESTDIR=build INSTALL=ginstall STRIP=echo QUAKE3=1
+        make ${{ matrix.rule }} -j$(sysctl -n hw.logicalcpu) ARCH=arm64 CC=${{ matrix.cc }} DESTDIR=build INSTALL=ginstall STRIP=echo QUAKE3=1
         ./make-macosx-app.sh release
-        hdiutil create -format UDZO -srcfolder build/release-darwin-universal2/OmegA.app build/OmegA.dmg
+        hdiutil create -format UDZO -srcfolder bin/release-darwin-universal2/OmegA.app bin/OmegA.dmg
 
     - uses: actions/upload-artifact@v4
       with:
