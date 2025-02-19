@@ -176,7 +176,7 @@ jobs:
         uses: czietz/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: "test"
+          automatic_release_tag: "omega-dev"
           prerelease: true
           title: Development Build
           files: |
