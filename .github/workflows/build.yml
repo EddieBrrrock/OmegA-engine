@@ -173,7 +173,7 @@ jobs:
           7z a -r q3-omega-engine-linux-x86_64.zip      ./release-linux-x86_64
           7z a -r q3-omega-engine-windows-x86.zip       ./release-mingw64-x86
           7z a -r q3-omega-engine-windows-x86_64.zip    ./release-mingw64-x86_64
-          7z a -r q3-omega-engine-macos-universal2.zip  ./OmegA.dmg
+          7z a q3-omega-engine-macos-universal2.zip     ./release-darwin-universal2/OmegA.dmg
       - name: Create latest build
         uses: czietz/action-automatic-releases@latest
         with:
